@@ -1,6 +1,8 @@
 package com.seana;
 
+import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
@@ -33,6 +35,8 @@ public class SesClient {
     logger.log("Constructing SES service");
 
     AWSCredentialsProvider credentialsProvider = new CustomCredentialsProvider(logger);
+    AWSCredentials creds = credentialsProvider.getCredentials();
+    logger.log(String.format("Length is: %d", creds.getAWSAccessKeyId().length()));
 
     logger.log("Credentials PROVIDED!");
     simpleEmailService = AmazonSimpleEmailServiceClientBuilder.standard()
@@ -58,9 +62,9 @@ public class SesClient {
             .withSubject(new Content()
                 .withCharset("UTF-8").withData(SUBJECT)))
         .withSource(FROM);
-        // Comment or remove the next line if you are not using a
-        // configuration set
-        // .withConfigurationSetName(CONFIGSET);
+    // Comment or remove the next line if you are not using a
+    // configuration set
+    // .withConfigurationSetName(CONFIGSET);
 
     logger.log("DONE building request");
     simpleEmailService.sendEmail(request);

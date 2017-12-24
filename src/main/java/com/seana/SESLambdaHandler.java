@@ -10,7 +10,7 @@ public class SESLambdaHandler implements RequestHandler<Object, String> {
   public String handleRequest(Object input, Context context) {
     LambdaLogger logger = context.getLogger();
 
-    logger.log("Handler Invoked ooo^^^^^^^");
+    logger.log("Handler Invoked LAMBDA^^^^^^^");
     Runtime.getRuntime().traceMethodCalls(true);
 
     logger.log("Input below.");
