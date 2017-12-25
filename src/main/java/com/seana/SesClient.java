@@ -1,10 +1,7 @@
 package com.seana;
 
-import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.regions.Regions;
-import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
 import com.amazonaws.services.simpleemail.model.*;
@@ -28,28 +25,17 @@ public class SesClient {
   static final String TEXTBODY = "This email was sent through Amazon SES "
       + "using the AWS SDK for Java.";
 
-  private LambdaLogger logger;
+  public SesClient() {
 
-  public SesClient(LambdaLogger logger) {
-    this.logger = logger;
-    logger.log("Constructing SES service");
+    AWSCredentialsProvider credentialsProvider = new CustomCredentialsProvider();
 
-    AWSCredentialsProvider credentialsProvider = new CustomCredentialsProvider(logger);
-    AWSCredentials creds = credentialsProvider.getCredentials();
-    logger.log(String.format("Length is: %d", creds.getAWSAccessKeyId().length()));
-
-    logger.log("Credentials PROVIDED!");
     simpleEmailService = AmazonSimpleEmailServiceClientBuilder.standard()
         .withCredentials(credentialsProvider)
         .withRegion(Regions.US_WEST_2.getName())
         .build();
-
-    logger.log("DONE CTOR");
   }
 
   public void Send() {
-    logger.log("building request");
-
     SendEmailRequest request = new SendEmailRequest()
         .withDestination(
             new Destination().withToAddresses(TO))
@@ -66,11 +52,6 @@ public class SesClient {
     // configuration set
     // .withConfigurationSetName(CONFIGSET);
 
-    logger.log("DONE building request");
     simpleEmailService.sendEmail(request);
-    System.out.println("Email sent!");
-
-    // sendEmailRequest.setMessage();
-    // simpleEmailService.sendEmail(sendEmailRequest);
   }
 }
