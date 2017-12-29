@@ -13,6 +13,11 @@ public class SesClient {
   static final String FROM = "andosw@gmail.com";
   static final String TO = "andosw@gmail.com";
 
+  static final String BOUNCE_TO = "bounce@simulator.amazonses.com";
+  static final String OOTO_TO = "ooto@simulator.amazonses.com";
+  static final String COMPLAINT_TO = "complaint@simulator.amazonses.com";
+  static final String SUPPRESSION_TO = "complaint@simulator.amazonses.com";
+
   static final String SUBJECT = "Amazon SES prototype test w/ Lambda";
 
   // The HTML body for the email.
@@ -38,7 +43,7 @@ public class SesClient {
   public void Send() {
     SendEmailRequest request = new SendEmailRequest()
         .withDestination(
-            new Destination().withToAddresses(TO))
+            new Destination().withToAddresses(SUPPRESSION_TO))
         .withMessage(new Message()
             .withBody(new Body()
                 .withHtml(new Content()
