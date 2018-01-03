@@ -6,7 +6,7 @@ import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
 import com.amazonaws.services.simpleemail.model.*;
 
-public class SesClient {
+public class SesSimpleClient {
 
   private final AmazonSimpleEmailService simpleEmailService;
 
@@ -30,7 +30,9 @@ public class SesClient {
   static final String TEXTBODY = "This email was sent through Amazon SES "
       + "using the AWS SDK for Java.";
 
-  public SesClient() {
+  static final String CONFIGSET = "basic_config_set";
+
+  public SesSimpleClient() {
 
     AWSCredentialsProvider credentialsProvider = new CustomCredentialsProvider();
 
@@ -43,7 +45,7 @@ public class SesClient {
   public void Send() {
     SendEmailRequest request = new SendEmailRequest()
         .withDestination(
-            new Destination().withToAddresses(SUPPRESSION_TO))
+            new Destination().withToAddresses(TO))
         .withMessage(new Message()
             .withBody(new Body()
                 .withHtml(new Content()
@@ -52,10 +54,12 @@ public class SesClient {
                     .withCharset("UTF-8").withData(TEXTBODY)))
             .withSubject(new Content()
                 .withCharset("UTF-8").withData(SUBJECT)))
-        .withSource(FROM);
-    // Comment or remove the next line if you are not using a
-    // configuration set
-    // .withConfigurationSetName(CONFIGSET);
+        .withSource(FROM)
+        .withTags(new MessageTag()
+            .withName("Custom-Tag-Name-Foo")
+            .withValue("FOOBARBAZ"))
+        .withConfigurationSetName(CONFIGSET);
+
 
     simpleEmailService.sendEmail(request);
   }
